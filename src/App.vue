@@ -12,7 +12,7 @@ v-app
       v-row
         v-col(cols=12 md=6 v-for="runner in runners")
           v-card(outlined :href="`https://twitch.tv/${runner.display_name}`" hover).d-flex.align-center
-            v-img(:src="runner.profile_image_url" max-width=80 max-height=80 style="width:80px; height:80px; border-radius:50%").ma-2
+            v-img(:src="runner.profile_image_url" max-width=80 max-height=80 style="width:80px; height:80px; border-radius:5%").ma-2
             .text-h5.ml-2 {{runner.display_name}}
     #history.mt-12.fade-in(v-if="history.length")
       .overline Race History
