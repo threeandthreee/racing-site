@@ -2,11 +2,11 @@
 v-app
   v-container
     #head.fade-in(v-if="display.title")
-      .overline Next Race
+      .overline Next Up
       .text-h4.text-sm-h3.text-md-h2.text-xl-h1 {{display.title}}
       .text-h6.text-sm-h5.text-md-h4.text-xl-h3 {{display.date}}
       .text-body1.mt-4 We try to race every other week.
-      .text-body1 You can subscribe to our race calendar <a :href="calendarUrl">here</a>, and use <a :href="multitwitchUrl">this link</a> to watch all the streams at once on race day!
+      .text-body1 Subscribe to <a :href="calendarUrl">our race calendar</a> and watch the race on <a href="https://www.twitch.tv/raceswild">the RacesWild twitch channel</a>!
     #racers.mt-12.fade-in(v-if="runners[0].login")
       .overline The Racers
       v-row
@@ -19,7 +19,7 @@ v-app
       v-row
         v-col(cols=12 v-for="race in history")
           v-card(outlined)
-            v-card-title [{{race.date}}] {{race.summary}}
+            v-card-title {{race.date}} - {{race.summary}}
             v-card-text(v-html="race.description")
 </template>
 
@@ -43,7 +43,7 @@ export default {
   }),
   computed: {
     multitwitchUrl() {
-      return `https://kadgar.net/live/${this.runners.map(it => it.display_name).join('/')}`
+      return `https://multitwitch.tv/${this.runners.map(it => it.display_name).join('/')}`
     }
   },
   async created () {
@@ -79,7 +79,7 @@ export default {
     past.reverse()
     this.history = past.map(it => ({
       summary: it.summary,
-      description: it.description.replaceAll(' | ', '<br/>'),
+      description: it.description,
       date: dayjs(it.start.dateTime).format('MMM D')
     }))
   }
