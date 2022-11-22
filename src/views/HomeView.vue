@@ -13,7 +13,7 @@ v-app
       div(v-if="isRacingNow")
         iframe(src="https://player.twitch.tv/?channel=raceswild&parent=raceswild.3and3.dev&parent=racing.3and3.dev&parent=raceswild.com&parent=localhost" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="620")
       div(v-if="!isRacingNow")
-        iframe(src="https://player.twitch.tv/?collection=_5tpY1b8KReJxw&parent=raceswild.3and3.dev&parent=racing.3and3.dev&parent=raceswild.com&parent=localhost" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="620")
+        iframe(src="https://player.twitch.tv/?collection=_5tpY1b8KReJxw&parent=raceswild.3and3.dev&parent=racing.3and3.dev&parent=raceswild.com&parent=localhost&muted=true" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="620")
     #history.mt-12.fade-in(v-if="history.length")
       .overline Race History
       v-row
@@ -69,10 +69,12 @@ export default {
     }
 
     //current race extra data
-    let current = await fetch('https://racing-events-api.3and3.dev')
-      .then(response => response.json())
-      .catch()
-    this.raceData = current
+    try{
+      let current = await fetch('https://racing-events-api.3and3.dev')
+        .then(response => response.json())
+        .catch()
+      this.raceData = current
+    } catch(err) {}
 
     //history
     let past = await fetch(`${this.api}/calendar?timeMax=${dayjs().toISOString()}`)
