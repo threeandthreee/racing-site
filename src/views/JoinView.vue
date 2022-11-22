@@ -1,0 +1,79 @@
+<template lang="pug">
+v-app
+  v-container.join.fade-in
+    .width-wrapper
+      .d-flex.justify-start.align-center.flex-wrap
+        v-btn.pa-0(text to="/" color="primary" x-large) Races Wild
+        v-icon.mx-4 mdi-greater-than
+        v-btn.pa-0(text disabled x-large) Joining the Restream
+      v-timeline(dense align-top)
+        v-timeline-item(icon="mdi-numeric-1" fill-dot)
+          v-card.tl-card.elevation-6
+            v-card-text Join the <a href="https://discord.gg/V7caHdC8r3" target="_blank">Aces Wild Discord</a> and head to <strong>#role-selection</strong> to get access to the race channels.
+        v-timeline-item(icon="mdi-numeric-2" fill-dot)
+          v-card.tl-card.elevation-6
+            v-card-text
+              div Prepare a streaming scene with oversized elements. Put a big timer in the upper right and if you'd like, a big webcam feed in the bottom right. Your name label will be placed in the lower left corner.
+              v-expansion-panels.mt-4
+                v-expansion-panel
+                  v-expansion-panel-header.py-0
+                    .d-flex.justify-start.align-center
+                      v-icon.mr-2(large color="primary") mdi-image-area
+                      div Example Scene Layout
+                  v-expansion-panel-content
+                    v-img.mb-2(src="/streamexample.png" max-width="620")
+                v-expansion-panel
+                  v-expansion-panel-header.py-0
+                    .d-flex.justify-start.align-center
+                      v-icon.mr-2(large color="primary") mdi-video
+                      div Tutorial: Restream Scene Setup
+                  v-expansion-panel-content
+                    iframe(src="https://player.twitch.tv/?video=1659668461&parent=raceswild.3and3.dev&parent=racing.3and3.dev&parent=raceswild.com&parent=localhost&autoplay=false" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="620")
+        v-timeline-item(icon="mdi-numeric-3" fill-dot)
+          v-card.tl-card.elevation-6
+            v-card-text
+              p Enable <a href="https://obsproject.com/eu/kb/virtual-camera-guide" target="_blank">OBS Virtual Camera</a> targeting the scene you just made and join the restream room. If the room is locked, check discord for the password.
+              v-btn.mb-4(block href="https://vdo.ninja/?room=raceswild&sl&l&g=0&blind&deaf&s" target="_blank" color="primary") Join Restream Room
+              p Make sure to use a chrome-based browser and select <strong>Join Room with Camera</strong>. Please do NOT use the screenshare option, it causes issues with the restream layout.
+              p Feel free to stream to your own channel during the race with whatever scene you like. If you followed the instructions, your virtual camera will stay locked to the correct scene.
+              v-expansion-panels
+                v-expansion-panel
+                  v-expansion-panel-header.py-0
+                    .d-flex.justify-start.align-center
+                      v-icon.mr-2(large color="primary") mdi-video
+                      div Tutorial: Joining the Restream
+                  v-expansion-panel-content
+                    iframe(src="https://player.twitch.tv/?video=1659668462&parent=raceswild.3and3.dev&parent=racing.3and3.dev&parent=raceswild.com&parent=localhost&autoplay=false" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="620")
+        v-timeline-item(icon="mdi-numeric-4" fill-dot)
+          v-card.tl-card.elevation-6
+            v-card-text
+              p Join the racetime and ready up. (Make a <a href="https://racetime.gg" target="_blank">racetime.gg</a> account if you haven't already.)
+              v-btn.mb-4(v-if="raceData.racetime" block :href="raceData.racetime" color="primary" target="_blank") Racetime for the current/upcoming race
+              v-btn.mb-4(v-else block disabled) A racetime has not yet been set for the current/upcoming race
+              p.mb-0 The racetime usually isn't created until just before the race. At that point you'll be able to find it here, on <a href="https://twitch.tv/raceswild" target="_blank">twitch.tv/raceswild</a> with the <strong>!racetime</strong> command, or just through the directory of active races in livesplit.
+        v-timeline-item(icon="mdi-numeric-5" fill-dot)
+          v-card.tl-card.elevation-6
+            v-card-text
+              p.mb-0 Good luck and have fun!
+</template>
+
+<script>
+export default {
+  data: () => ({
+    raceData: {}
+  }),
+  async created () {
+    this.raceData = await fetch('https://racing-events-api.3and3.dev')
+      .then(response => response.json())
+      .catch()
+  }
+}
+</script>
+
+<style lang="stylus">
+.join
+  .width-wrapper
+    max-width: 796px
+    .tl-card
+      max-width: 700px
+</style>
