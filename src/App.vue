@@ -10,4 +10,7 @@ router-view
   0% { opacity: 0; }
   100% { opacity: 1; }
 }
+.w-100 {
+  width: 100%
+}
 </style>

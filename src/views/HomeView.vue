@@ -6,20 +6,24 @@ v-app
       .text-h4.text-sm-h3.text-md-h2.text-xl-h1 {{display.title}}
       .text-h6.text-sm-h5.text-md-h4.text-xl-h3 {{display.date}}
       .text-body1.my-4 We run speedrun races every other week! If you're interested in running, <router-link to="/join">here's how to join.</router-link>
-      div.mx-n1.mb-4
-        v-btn.mx-1(color="primary" href="https://discord.gg/V7caHdC8r3" target="_blank") Aces Wild Discord
-        v-btn.mx-1(color="primary" :href="calendarUrl" target="_blank") Race Calendar
-        v-btn.mx-1(color="primary" :href="raceData.bingo" target="_blank" :disabled="!raceData.bingo") {{raceData.bingo ? `Bingo card for next/current race` : `Bingo card isn't ready yet, check back soon!`}}
-      div(v-if="isRacingNow")
-        iframe(src="https://player.twitch.tv/?channel=raceswild&parent=raceswild.3and3.dev&parent=racing.3and3.dev&parent=raceswild.com&parent=localhost" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="620")
-      div(v-if="!isRacingNow")
-        iframe(src="https://player.twitch.tv/?collection=_5tpY1b8KReJxw&parent=raceswild.3and3.dev&parent=racing.3and3.dev&parent=raceswild.com&parent=localhost&muted=true" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="620")
-    #history.mt-12.fade-in(v-if="history.length")
+      div.mx-n1.mb-3.mt-n1.d-flex.flex-wrap
+        v-btn.ma-1(color="primary" href="https://discord.gg/V7caHdC8r3" target="_blank") Aces Wild Discord
+        v-btn.ma-1(color="primary" :href="calendarUrl" target="_blank") Race Calendar
+        v-btn.ma-1(color="primary" :href="raceData.bingo" target="_blank" :disabled="!raceData.bingo") {{raceData.bingo ? `Viewer Bingo Card!` : `Bingo card isn't ready yet`}}
+      .vid.mx-n3.mx-md-0
+        div(v-if="isRacingNow")
+          iframe(src="https://player.twitch.tv/?channel=raceswild&parent=raceswild.3and3.dev&parent=racing.3and3.dev&parent=raceswild.com&parent=localhost" frameborder="0" allowfullscreen="true" scrolling="no"  width="100%" style="aspect-ratio: 16/9")
+        div(v-if="!isRacingNow")
+          iframe(src="https://player.twitch.tv/?collection=_5tpY1b8KReJxw&parent=raceswild.3and3.dev&parent=racing.3and3.dev&parent=raceswild.com&parent=localhost&muted=true&autoplay=true" frameborder="0" allowfullscreen="true" scrolling="no" width="100%" style="aspect-ratio: 16/9")
+    #history.mt-4.fade-in(v-if="history.length")
       .overline Race History
       v-row
         v-col(cols=12 v-for="race in history")
           v-card(outlined)
-            v-card-title {{race.date}} - {{race.summary}}
+            v-card-title(style="word-break: normal")
+              .d-flex.justify-space-between.w-100
+                span {{race.summary}}
+                v-chip.ml-2.flex-shrink-0(color="primary") {{race.date}}
             v-card-text(v-html="race.description")
 </template>
 
@@ -43,8 +47,8 @@ export default {
     history: []
   }),
   computed: {
-    multitwitchUrl() {
-      return `https://multitwitch.tv/${this.runners.map(it => it.display_name).join('/')}`
+    vidHeight() {
+      return this.$refs.container.clientWidth / 16 * 9
     }
   },
   async created () {
@@ -72,7 +76,6 @@ export default {
     try{
       let current = await fetch('https://racing-events-api.3and3.dev')
         .then(response => response.json())
-        .catch()
       this.raceData = current
     } catch(err) {}
 
