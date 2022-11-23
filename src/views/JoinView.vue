@@ -15,7 +15,7 @@ v-app
           .card-wrapper
             v-card.tl-card.elevation-6
               v-card-text
-                div Prepare a streaming scene with oversized elements. Put a big timer in the upper right and if you'd like, a big webcam feed in the bottom right. Your name label will be placed in the lower left corner.
+                div Prepare a streaming scene with oversized elements. Put a big timer in the upper right and if you'd like, a big webcam feed in the bottom right. Your name label will be placed in the lower left corner. Your screen will come through at half the size, so make your elements twice as big.
                 v-expansion-panels.mt-4
                   v-expansion-panel
                     v-expansion-panel-header.py-0
@@ -85,7 +85,7 @@ export default {
     width: calc(100%+30px)
     .tl-card
       max-width: 900px
-      margin: 30px 0 25px -96px
+      margin: 28px 0 25px -96px
   .v-expansion-panel-content, .v-expansion-panel-content__wrap
     padding: 0
 </style>
