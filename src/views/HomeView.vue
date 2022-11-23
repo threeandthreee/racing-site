@@ -9,7 +9,7 @@ v-app
       div.mx-n1.mb-3.mt-n1.d-flex.flex-wrap
         v-btn.ma-1(color="primary" href="https://discord.gg/V7caHdC8r3" target="_blank") Aces Wild Discord
         v-btn.ma-1(color="primary" :href="calendarUrl" target="_blank") Race Calendar
-        v-btn.ma-1(color="primary" :href="raceData.bingo" target="_blank" :disabled="!raceData.bingo") {{raceData.bingo ? `Viewer Bingo Card!` : `Bingo card isn't ready yet`}}
+        v-btn.ma-1(color="primary" to="/bingo" target="_blank") Viewer Bingo!
       .vid.mx-n3.mx-md-0
         div(v-if="isRacingNow")
           iframe(src="https://player.twitch.tv/?channel=raceswild&parent=raceswild.3and3.dev&parent=racing.3and3.dev&parent=raceswild.com&parent=localhost" frameborder="0" allowfullscreen="true" scrolling="no"  width="100%" style="aspect-ratio: 16/9")
@@ -18,7 +18,7 @@ v-app
     #history.mt-4.fade-in(v-if="history.length")
       .overline Race History
       v-row
-        v-col(cols=12 v-for="race in history")
+        v-col(cols=12 v-for="race in history" :key="race.id")
           v-card(outlined)
             v-card-title(style="word-break: normal")
               .d-flex.justify-space-between.w-100
@@ -43,7 +43,6 @@ export default {
       date: ''
     },
     isRacingNow: undefined,
-    raceData: {},
     history: []
   }),
   computed: {
@@ -71,13 +70,6 @@ export default {
     } else {
       this.display.title = 'There are no upcoming races currently scheduled.'
     }
-
-    //current race extra data
-    try{
-      let current = await fetch('https://racing-events-api.3and3.dev')
-        .then(response => response.json())
-      this.raceData = current
-    } catch(err) {}
 
     //history
     let past = await fetch(`${this.api}/calendar?timeMax=${dayjs().toISOString()}`)

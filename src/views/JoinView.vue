@@ -38,6 +38,7 @@ v-app
                 p Enable <a href="https://obsproject.com/eu/kb/virtual-camera-guide" target="_blank">OBS Virtual Camera</a> targeting the scene you just made and join the restream room. If the room is locked, check discord for the password.
                 v-btn.mb-4(block href="https://vdo.ninja/?room=raceswild&sl&l&g=0&blind&deaf&s" target="_blank" color="primary") Join Restream Room
                 p Make sure to use a chrome-based browser and select <strong>Join Room with Camera</strong>. Please do NOT use the screenshare option, it causes issues with the restream layout.
+                p Set the video feed to the virtual camera and your audio feed to either <em>no audio</em> or your game capture audio.
                 p Feel free to stream to your own channel during the race with whatever scene you like. If you followed the instructions, your virtual camera will stay locked to the correct scene.
                 v-expansion-panels
                   v-expansion-panel
@@ -52,29 +53,13 @@ v-app
             v-card.tl-card.elevation-6
               v-card-text
                 p Join the racetime and ready up. (Make a <a href="https://racetime.gg" target="_blank">racetime.gg</a> account if you haven't already.)
-                v-btn.mb-4(v-if="raceData.racetime" block :href="raceData.racetime" color="primary" target="_blank") Racetime for the current race
-                v-btn.mb-4(v-else block disabled) No racetime for upcoming race yet
-                p.mb-0 The racetime usually isn't created until just before the race. At that point you'll be able to find it here, on <a href="https://twitch.tv/raceswild" target="_blank">twitch.tv/raceswild</a> with the <strong>!racetime</strong> command, or just through the directory of active races in livesplit.
+                p.mb-0 The racetime usually isn't created until just before the race. At that point you'll be able to find it on discord, <a href="https://twitch.tv/raceswild" target="_blank">twitch.tv/raceswild</a> with the <strong>!racetime</strong> command, or just through the directory of active races in livesplit.
         v-timeline-item(icon="mdi-numeric-5" fill-dot)
           .card-wrapper
             v-card.tl-card.elevation-6
               v-card-text
                 p.mb-0 Good luck and have fun!
 </template>
-
-<script>
-export default {
-  data: () => ({
-    raceData: {}
-  }),
-  async created () {
-    try{
-      this.raceData = await fetch('https://racing-events-api.3and3.dev')
-        .then(response => response.json())
-    } catch(err) {}
-  }
-}
-</script>
 
 <style lang="stylus">
 .join

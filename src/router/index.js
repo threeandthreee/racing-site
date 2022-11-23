@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import BingoView from '../views/BingoView.vue'
 import JoinView from '../views/JoinView.vue'
 import AdminView from '../views/AdminView.vue'
 
@@ -11,6 +12,11 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/bingo',
+    name: 'bingo',
+    component: BingoView
   },
   {
     path: '/join',
