@@ -35,10 +35,9 @@ v-app
           .card-wrapper
             v-card.tl-card.elevation-6
               v-card-text
-                p Enable <a href="https://obsproject.com/eu/kb/virtual-camera-guide" target="_blank">OBS Virtual Camera</a> targeting the scene you just made and join the restream room. If the room is locked, check discord for the password.
-                v-btn.mb-4(block href="https://vdo.ninja/?room=raceswild&sl&l&g=0&blind&deaf&s" target="_blank" color="primary") Join Restream Room
+                p Enable <a href="https://obsproject.com/eu/kb/virtual-camera-guide" target="_blank">OBS Virtual Camera</a> targeting the scene you just made and join the restream room. You can find the link and password for the restream room on the discord server in the <strong>#race-instructions</strong> channel.
                 p Make sure to use a chrome-based browser and select <strong>Join Room with Camera</strong>. Please do NOT use the screenshare option, it causes issues with the restream layout.
-                p Set the video feed to the virtual camera and your audio feed to either <em>no audio</em> or your game capture audio.
+                p Set the video feed to the virtual camera and your audio feed to your game capture audio.
                 p Feel free to stream to your own channel during the race with whatever scene you like. If you followed the instructions, your virtual camera will stay locked to the correct scene.
                 v-expansion-panels
                   v-expansion-panel
