@@ -10,5 +10,5 @@ v-app
       v-btn(text href="https://twitch.tv/raceswild" target="_blank" color="primary") Races Wild Twitch
       v-btn(text href="https://www.twitch.tv/moderator/raceswild" target="_blank" color="primary") Races Wild Mod View
       v-btn(text href="https://dashboard.twitch.tv/u/raceswild/stream-manager" target="_blank" color="primary") Creator Dashboard
-      v-btn(text href="https://bingobaker.com/view/5695104" target="_blank" color="primary") Manage Bingo
+      v-btn(text href="https://bingobaker.com/view/5782772" target="_blank" color="primary") Manage Bingo
 </template>
