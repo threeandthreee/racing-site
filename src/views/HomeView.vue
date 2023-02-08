@@ -5,7 +5,7 @@ v-app
       .overline Next Up
       .text-h4.text-sm-h3.text-md-h2.text-xl-h1 {{display.title}}
       .text-h6.text-sm-h5.text-md-h4.text-xl-h3 {{display.date}}
-      .text-body1.my-4 We run speedrun races every other week! If you're interested in running, <router-link to="/join">here's how to join.</router-link>
+      .text-body1.my-4 We run speedrun races every other week!
       div.mx-n1.mb-3.mt-n1.d-flex.flex-wrap
         v-btn.ma-1(color="primary" href="https://discord.gg/V7caHdC8r3" target="_blank") Aces Wild Discord
         v-btn.ma-1(color="primary" :href="calendarUrl" target="_blank") Race Calendar
@@ -52,7 +52,7 @@ export default {
   },
   async created () {
     //next race
-    let future = await fetch(`${this.api}/calendar?timeMin=${dayjs().toISOString()}`)
+    let future = await fetch(`${this.api}/calendar/next`)
       .then(response => response.json())
       .then(data => data.items)
     if(future.length) {

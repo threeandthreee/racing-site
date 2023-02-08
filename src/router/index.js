@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import BingoView from '../views/BingoView.vue'
-import JoinView from '../views/JoinView.vue'
+import ChecklistView from '../views/ChecklistView.vue'
 import AdminView from '../views/AdminView.vue'
 
 Vue.use(VueRouter)
@@ -19,9 +19,9 @@ const routes = [
     component: BingoView
   },
   {
-    path: '/join',
-    name: 'join',
-    component: JoinView
+    path: '/checklist',
+    name: 'checklist',
+    component: ChecklistView
   },
   {
     path: '/admin',
