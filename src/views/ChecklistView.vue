@@ -39,7 +39,7 @@ export default {
         'Only stream mix and game audio enabled in OBS',
         'Confirm audio in sync for game',
         'Confirm audio in sync for cam',
-        'Normal speech at -20, game at -35
+        'Normal speech at -20, game at -35'
       ],
       'Pre-race': [
         'Create racetime (no streaming requirement!)',
