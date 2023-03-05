@@ -7,7 +7,7 @@ v-app
       v-btn.pa-0(text disabled x-large) Checklist
     v-divider.mb-4 
     v-row 
-      v-col(v-for="(group, label) of items" :key="label" cols=6)
+      v-col(v-for="(group, label) of items" :key="label" cols=12 sm=6)
         v-card(outlined)
           v-card-title.pb-0 {{label}}
           .px-2.pb-4
@@ -28,22 +28,23 @@ export default {
         'Switch to RacesWild profile',
         'Set stream title, notifications, and tabs',
         'Configure local scene',
+        'Enable delay',
         'Switch to RacesWild scene',
         'Open windows for race participants',
         'Set labels'
       ],
       'Audio': [
         'Check that mic filters are enabled',
-        'All but browser audio disabled for stream mix',
-        'Only stream mix audio enabled in OBS',
-        'Donor audio stream window unmuted',
-        'Verify audio level of donor stream'
+        'Only mic and voice chat in stream mix',
+        'Only stream mix and game audio enabled in OBS',
+        'Confirm audio in sync for game',
+        'Confirm audio in sync for cam',
+        'Normal speech at -20, game at -35
       ],
       'Pre-race': [
         'Create racetime (no streaming requirement!)',
         'Set marker',
         'Prep personal bingo card',
-        'Check that delay is activated'
       ],
       'Post-race': [
         'Set marker',
