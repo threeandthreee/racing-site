@@ -30,6 +30,10 @@ const routes = [
     component: AdminView
   },
   {
+    path: '/join',
+    redirect: '/instructions'
+  },
+  {
     path: '/instructions',
     name: 'instructions',
     component: InstructionsView
