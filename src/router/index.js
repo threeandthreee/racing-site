@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import BingoView from '../views/BingoView.vue'
 import ChecklistView from '../views/ChecklistView.vue'
 import AdminView from '../views/AdminView.vue'
+import InstructionsView from '../views/InstructionsView.vue'
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: AdminView
+  },
+  {
+    path: '/instructions',
+    name: 'instructions',
+    component: InstructionsView
   }
 ]
 
