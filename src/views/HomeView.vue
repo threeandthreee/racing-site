@@ -9,7 +9,9 @@ v-app
       div.mx-n1.mb-3.mt-n1.d-flex.flex-wrap.align-center
         v-btn(tile icon x-large href="https://twitch.tv/raceswild" target="_blank").pa-2
           img(src="TwitchGlitchPurple.svg")
-        v-btn(tile icon x-large href="https://discord.gg/V7caHdC8r3" target="_blank").pa-1
+        v-btn(tile icon x-large href="https://www.youtube.com/@raceswild" target="_blank").pa-2
+          img(src="youtube.svg")
+        v-btn(tile icon x-large href="https://discord.gg/V7caHdC8r3" target="_blank").pa-2
           img(src="discord-mark-blue.svg")
         v-btn(tile icon x-large :href="calendarUrl" target="_blank").pa-2
           img(src="Google_Calendar_icon_(2020).svg")
