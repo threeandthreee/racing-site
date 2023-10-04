@@ -28,68 +28,59 @@ v-app
       ) Creator Dashboard
     div.fade-in(v-if="isAuthed")
       v-divider.my-4
-      .d-flex
-        .display-1 Events
-        v-spacer
-        v-btn(
-          color="primary"
-          @click="openEvent()"
-        ) Create Event
-      v-row
-        v-col(cols=12 md=6)
-          h2 Past
-          v-data-iterator(
-            :items="pastEvents"
-            item-key="_id"
-            :items-per-page="5"
-          )
-            template(v-slot:default="{items}")
-              v-card.pa-2.mb-2(
-                v-for="item in items"
-                :key="item._id"
-                outlined
-                @click="openEvent(item)"
+      v-tabs
+        v-tab Events
+        v-tab Players
+        v-tab Constants
+        v-tab Guides
+        v-tab-item
+          v-row
+            v-col(cols=12 md=6)
+              h2 Past
+              v-data-iterator(
+                :items="pastEvents"
+                item-key="_id"
+                :items-per-page="5"
               )
-                .d-flex
-                  .overline {{format(item.when)}}
-                  v-spacer
-                  v-icon(
-                    color="red"
-                    v-if="!(item.title && item.description && item.participants && item.winners && item.links.twitch && item.links.youtube)"
-                  ) mdi-wrench
-                h3 {{item.title}}
-        v-col(cols=12 md=6)
-          h2 Upcoming
-          v-data-iterator(
-            :items="upcomingEvents"
-            item-key="_id"
-            :items-per-page="5"
-          )
-            template(v-slot:default="{items}")
-              v-card.pa-2.mb-2(
-                v-for="item in items"
-                :key="item._id"
-                outlined
-                @click="openEvent(item)"
+                template(v-slot:default="{items}")
+                  v-card.pa-2.mb-2(
+                    v-for="item in items"
+                    :key="item._id"
+                    outlined
+                    @click="openEvent(item)"
+                  )
+                    .d-flex
+                      .overline {{format(item.when)}}
+                      v-spacer
+                      v-icon(
+                        color="red"
+                        v-if="!(item.title && item.description && item.participants && item.winners && item.links.twitch && item.links.youtube)"
+                      ) mdi-wrench
+                    h3 {{item.title}}
+            v-col(cols=12 md=6)
+              h2 Upcoming
+              v-data-iterator(
+                :items="upcomingEvents"
+                item-key="_id"
+                :items-per-page="5"
               )
-                .d-flex
-                  .overline {{format(item.when)}}
-                  v-spacer
-                  v-icon(
-                    color="red"
-                    v-if="!(item.title && item.description && item.instructions)"
-                  ) mdi-wrench
-                h3 {{item.title}}
-      v-divider.my-4
-      .d-flex
-        .display-1 Players
-        v-spacer
-        v-btn(
-          color="primary"
-          @click="openPlayer()"
-        ) Create Player
-      v-row
-        v-col(cols=12)
+                template(v-slot:default="{items}")
+                  v-card.pa-2.mb-2(
+                    v-for="item in items"
+                    :key="item._id"
+                    outlined
+                    @click="openEvent(item)"
+                  )
+                    .d-flex
+                      .overline {{format(item.when)}}
+                      v-spacer
+                      v-icon(
+                        color="red"
+                        v-if="!(item.title && item.description && item.instructions)"
+                      ) mdi-wrench
+                    h3 {{item.title}}
+          v-btn(color="primary" @click="openEvent()") Create Event
+        v-tab-item
           v-data-table(
             :items="players"
             :headers="playersHeader"
@@ -97,6 +88,23 @@ v-app
             sort-by="participations"
             sort-desc=true
           )
+          v-btn(color="primary" @click="openPlayer()") Create Player
+        v-tab-item
+          v-data-table(
+            :items="constants"
+            :headers="constantsHeader"
+            @click:row="openConstant"
+            sort-by="slug"
+          )
+          v-btn(color="primary" @click="openConstant()") Create Constant
+        v-tab-item
+          v-data-table(
+            :items="guides"
+            :headers="guidesHeader"
+            @click:row="openGuide"
+            sort-by="slug"
+          )
+          v-btn(color="primary" @click="openGuide()") Create Guide
     v-dialog(
       v-model="eventDialog"
       fullscreen
@@ -221,7 +229,7 @@ v-app
           v-btn(icon x-large @click="playerDialog = false")
             v-icon(x-large) mdi-close
         v-row.pa-2
-          v-col(cols=12 sm=6)
+          v-col(cols=12)
             v-text-field.mb-2(
               v-model="currentPlayer.short"
               label="Short"
@@ -246,13 +254,105 @@ v-app
               outlined
               hide-details
             )
-          v-col(cols=6).d-none.d-sm-block
         .pa-2
           v-btn(
             block
             color="primary"
             @click="createOrEditPlayer"
           ) {{currentPlayer && currentPlayer._id ? 'Edit' : 'Create'}} Player
+        v-divider.my-2
+        .pa-2
+          v-card.pa-2(outlined)
+            v-text-field.mb-2(
+              readonly
+              hide-details
+              label="vdo.ninja push"
+              :value="`https://vdo.ninja/?s&push=raceswild${currentPlayer.short.replace('&','and').toLowerCase()}`"
+            )
+            v-text-field.mb-2(
+              readonly
+              hide-details
+              label="vdo.ninja view"
+              :value="`https://vdo.ninja/?view=raceswild${currentPlayer.short.replace('&','and').toLowerCase()}`"
+            )
+    v-dialog(
+      v-model="constantDialog"
+      fullscreen
+      hide-overlay
+    )
+      v-card(v-if="currentConstant")
+        .d-flex.align-center
+          .display-1.pa-2 {{currentConstant && currentConstant._id ? 'Edit' : 'Create'}} Constant
+          v-spacer
+          v-btn(icon x-large @click="constantDialog = false")
+            v-icon(x-large) mdi-close
+        v-row.pa-2
+          v-col(cols=12)
+            v-text-field.mb-2(
+              v-model="currentConstant.slug"
+              label="Slug"
+              outlined
+              hide-details
+              @change="currentConstant.slug = currentConstant.slug.toLowerCase().replace(' ', '_')"
+            )
+            v-text-field.mb-2(
+              v-model="currentConstant.value"
+              label="Value"
+              outlined
+              hide-details
+            )
+        .pa-2
+          v-btn(
+            block
+            color="primary"
+            @click="createOrEditConstant"
+          ) {{currentConstant && currentConstant._id ? 'Edit' : 'Create'}} Constant
+    v-dialog(
+      v-model="guideDialog"
+      fullscreen
+      hide-overlay
+    )
+      v-card(v-if="currentGuide")
+        .d-flex.align-center
+          .display-1.pa-2 {{currentGuide && currentGuide._id ? 'Edit' : 'Create'}} Guide
+          v-spacer
+          v-btn(icon x-large @click="guideDialog = false")
+            v-icon(x-large) mdi-close
+        v-row.pa-2
+          v-col(cols=12)
+            v-text-field.mb-2(
+              v-model="currentGuide.slug"
+              label="Slug"
+              outlined
+              hide-details
+              @change="currentGuide.slug = currentGuide.slug.toLowerCase().replace(' ', '_')"
+            )
+            v-text-field.mb-2(
+              v-model="currentGuide.title"
+              label="Title"
+              outlined
+              hide-details
+            )
+          v-col(cols=12 sm=6)
+            v-textarea.mb-2(
+              v-model="currentGuide.content"
+              label="Content (markdown)"
+              outlined
+              hide-details
+            )
+          v-col(cols=6).d-none.d-sm-block
+            v-textarea.mb-2(
+              v-model="currentGuide.content"
+              outlined
+              hide-details
+              readonly
+            )
+        .pa-2
+          v-btn(
+            block
+            color="primary"
+            @click="createOrEditGuide"
+          ) {{currentGuide && currentGuide._id ? 'Edit' : 'Create'}} Guide
 </template>
 
 <script>
@@ -280,6 +380,20 @@ export default {
       {text: 'Youtube', value: 'youtube', sortable: true},
       {text: 'Participations', value: 'participations', sortable: true},
       {text: 'Wins', value: 'wins', sortable: true}
+    ],
+    constants: [],
+    constantDialog: false,
+    currentConstant: undefined,
+    constantsHeader: [
+      {text: 'Slug', value: 'slug', sortable: true},
+      {text: 'Value', value: 'value', sortable: true}
+    ],
+    guides: [],
+    guideDialog: false,
+    currentGuide: undefined,
+    guidesHeader: [
+      {text: 'Slug', value: 'slug', sortable: true},
+      {text: 'Title', value: 'title', sortable: true}
     ]
   }),
   computed: {
@@ -322,10 +436,6 @@ export default {
       if(!this.currentEvent.when)
         this.currentEvent.when = 0
     },
-    openPlayer(item){
-      this.playerDialog = true
-      this.currentPlayer = item ? JSON.parse(JSON.stringify(item)) : {}
-    },
     createOrEditEvent(){
       if(this.loading || !this.currentEvent.when)
         return
@@ -345,6 +455,10 @@ export default {
         this.eventDialog = false
         return this.init()
       })
+    },
+    openPlayer(item){
+      this.playerDialog = true
+      this.currentPlayer = item ? JSON.parse(JSON.stringify(item)) : {}
     },
     createOrEditPlayer(){
       if(this.loading || !this.currentPlayer.short)
@@ -366,14 +480,62 @@ export default {
         return this.init()
       })
     },
+    openConstant(item){
+      this.constantDialog = true
+      this.currentConstant = item ? JSON.parse(JSON.stringify(item)) : {}
+    },
+    createOrEditConstant(){
+      if(this.loading || !this.currentConstant.slug)
+        return
+      this.loading = true
+      let url
+      if(this.currentConstant._id)
+        url = `${this.api}/update_constant?secret=${this.secret}&id=${this.currentConstant._id}`
+      else
+        url = `${this.api}/insert_constant?secret=${this.secret}`
+      let copy = JSON.parse(JSON.stringify(this.currentConstant))
+      delete copy._id
+      return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(copy)
+      }).then(() => {
+        this.currentConstant = undefined
+        this.constantDialog = false
+        return this.init()
+      })
+    },
+    openGuide(item){
+      this.guideDialog = true
+      this.currentGuide = item ? JSON.parse(JSON.stringify(item)) : {}
+    },
+    createOrEditGuide(){
+      if(this.loading || !this.currentGuide.slug)
+        return
+      this.loading = true
+      let url
+      if(this.currentGuide._id)
+        url = `${this.api}/update_guide?secret=${this.secret}&id=${this.currentGuide._id}`
+      else
+        url = `${this.api}/insert_guide?secret=${this.secret}`
+      let copy = JSON.parse(JSON.stringify(this.currentGuide))
+      delete copy._id
+      return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(copy)
+      }).then(() => {
+        this.currentGuide = undefined
+        this.guideDialog = false
+        return this.init()
+      })
+    },
     async init() {
       this.loading = true
-      await fetch(`${this.api}/upcoming_events`)
+      this.upcomingEvents = await fetch(`${this.api}/upcoming_events`)
         .then(data => data.json())
-        .then(json => this.upcomingEvents = json.result)
-      await fetch(`${this.api}/past_events`)
+        .then(json => json.result)
+      this. pastEvents = await fetch(`${this.api}/past_events`)
         .then(data => data.json())
-        .then(json => this.pastEvents = json.result)
+        .then(json => json.result)
       let players = await fetch(`${this.api}/players`)
         .then(data => data.json())
         .then(json => json.result)
@@ -388,9 +550,15 @@ export default {
         })
       })
       players.sort((a, b) => {
-        return a.participations - b.participations
+        return b.participations - a.participations
       })
       this.players = players
+      this.constants = await fetch(`${this.api}/constants`)
+        .then(data => data.json())
+        .then(json => json.result)
+      this.guides = await fetch(`${this.api}/guides`)
+        .then(data => data.json())
+        .then(json => json.result)
       this.loading = false
     }
   },
