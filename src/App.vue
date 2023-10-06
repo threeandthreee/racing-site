@@ -13,4 +13,11 @@ router-view
 .w-100 {
   width: 100%;
 }
+.markdown img {
+  max-width: 300px;
+  display: block;
+}
+.v-btn.breadcrumb {
+  min-width: 0 !important;
+}
 </style>

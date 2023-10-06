@@ -2,9 +2,9 @@
 v-app
   v-container.admin.fade-in
     .d-flex.justify-start.align-center.flex-wrap
-      v-btn.pa-0(text to="/" color="primary" x-large) Races Wild
+      v-btn.breadcrumb.pa-0(text to="/" color="primary" x-large) Races Wild
       v-icon.mx-2(x-small) mdi-greater-than
-      v-btn.pa-0(text disabled x-large) Admin
+      v-btn.breadcrumb.pa-0(text disabled x-large) Admin
     v-divider.mb-4
     v-text-field(
       placeholder="should you be here?"
@@ -12,6 +12,7 @@ v-app
       v-model="secret"
       @change="checkSecret"
       hide-details="auto"
+      type="password"
     )
     .my-2.d-flex.flex-column.align-start
       v-btn(
@@ -33,10 +34,11 @@ v-app
         v-tab Players
         v-tab Constants
         v-tab Guides
+        v-tab Links
         v-tab-item
           v-row
-            v-col(cols=12 md=6)
-              h2 Past
+            v-col(cols=12 md=6 order=2 order-md=1)
+              .text-h4.mt-2 Past
               v-data-iterator(
                 :items="pastEvents"
                 item-key="_id"
@@ -56,9 +58,9 @@ v-app
                         color="red"
                         v-if="!(item.title && item.description && item.participants && item.winners && item.links.twitch && item.links.youtube)"
                       ) mdi-wrench
-                    h3 {{item.title}}
-            v-col(cols=12 md=6)
-              h2 Upcoming
+                    .text-h5 {{item.title}}
+            v-col(cols=12 md=6 order=1 order-md=2)
+              .text-h4.mt-2 Upcoming
               v-data-iterator(
                 :items="upcomingEvents"
                 item-key="_id"
@@ -78,7 +80,7 @@ v-app
                         color="red"
                         v-if="!(item.title && item.description && item.instructions)"
                       ) mdi-wrench
-                    h3 {{item.title}}
+                    .text-h5 {{item.title}}
           v-btn(color="primary" @click="openEvent()") Create Event
         v-tab-item
           v-data-table(
@@ -105,6 +107,14 @@ v-app
             sort-by="slug"
           )
           v-btn(color="primary" @click="openGuide()") Create Guide
+        v-tab-item
+          v-row
+            v-col(cols=6)
+              .text-h5 Copy this
+              v-card.pa-2(outlined style="white-space:pre;") {{linksBlock}}
+            v-col(cols=6)
+              .text-h5 Preview
+              v-card.pa-2(outlined v-html="linksMarkdown")
     v-dialog(
       v-model="eventDialog"
       fullscreen
@@ -138,12 +148,16 @@ v-app
               label="Description (markdown)"
               outlined
               hide-details
+              no-resize
+              height="300px"
             )
             v-textarea.mb-2(
               v-model="currentEvent.instructions"
               label="Instructions (markdown)"
               outlined
               hide-details
+              no-resize
+              height="300px"
             )
           v-col(cols=6).d-none.d-sm-block
             v-text-field.mb-2(
@@ -152,19 +166,27 @@ v-app
               outlined
               hide-details
             )
-            v-textarea.mb-2(
-              v-model="currentEvent.description"
-              readonly
+            v-card.md-preview.markdown.pa-2.mb-2(
+              v-html="currentEventDescriptionMd"
               outlined
-              hide-details
+              height="300px"
             )
-            v-textarea.mb-2(
-              v-model="currentEvent.instructions"
-              readonly
+            v-card.md-preview.markdown.pa-2.mb-2(
+              v-html="currentEventInstructionsMd"
               outlined
-              hide-details
+              height="300px"
             )
           v-col(cols=12)
+            v-autocomplete.mb-2(
+              v-model="currentEvent.guides"
+              label="Attached Guides"
+              outlined
+              hide-details
+              :items="guides"
+              item-text="slug"
+              item-value="_id"
+              multiple
+            )
             v-autocomplete.mb-2(
               v-model="currentEvent.participants"
               label="Participants"
@@ -217,6 +239,11 @@ v-app
             color="primary"
             @click="createOrEditEvent"
           ) {{currentEvent && currentEvent._id ? 'Edit' : 'Create'}} Event
+        div(v-if="currentEvent._id")
+          v-divider.my-2
+          .pa-2
+            v-card.pa-2(outlined)
+              v-btn(:to="`/event/${currentEvent._id}`") Event Permalink
     v-dialog(
       v-model="playerDialog"
       fullscreen
@@ -260,21 +287,22 @@ v-app
             color="primary"
             @click="createOrEditPlayer"
           ) {{currentPlayer && currentPlayer._id ? 'Edit' : 'Create'}} Player
-        v-divider.my-2
-        .pa-2
-          v-card.pa-2(outlined)
-            v-text-field.mb-2(
-              readonly
-              hide-details
-              label="vdo.ninja push"
-              :value="`https://vdo.ninja/?s&push=raceswild${currentPlayer.short.replace('&','and').toLowerCase()}`"
-            )
-            v-text-field.mb-2(
-              readonly
-              hide-details
-              label="vdo.ninja view"
-              :value="`https://vdo.ninja/?view=raceswild${currentPlayer.short.replace('&','and').toLowerCase()}`"
-            )
+        div(v-if="currentPlayer.short")
+          v-divider.my-2
+          .pa-2
+            v-card.pa-2(outlined)
+              v-text-field.mb-2(
+                readonly
+                hide-details
+                label="vdo.ninja push"
+                :value="vdoPush(currentPlayer.short)"
+              )
+              v-text-field.mb-2(
+                readonly
+                hide-details
+                label="vdo.ninja view"
+                :value="vdoView(currentPlayer.short)"
+              )
     v-dialog(
       v-model="constantDialog"
       fullscreen
@@ -293,7 +321,7 @@ v-app
               label="Slug"
               outlined
               hide-details
-              @change="currentConstant.slug = currentConstant.slug.toLowerCase().replace(' ', '_')"
+              @change="currentConstant.slug = currentConstant.slug.toLowerCase().replaceAll(' ', '-')"
             )
             v-text-field.mb-2(
               v-model="currentConstant.value"
@@ -339,13 +367,14 @@ v-app
               label="Content (markdown)"
               outlined
               hide-details
+              no-resize
+              height="300px"
             )
           v-col(cols=6).d-none.d-sm-block
-            v-textarea.mb-2(
-              v-model="currentGuide.content"
+            v-card.md-preview.markdown.pa-2.mb-2(
+              v-html="currentGuideContentMd"
               outlined
-              hide-details
-              readonly
+              height="300px"
             )
         .pa-2
           v-btn(
@@ -357,6 +386,7 @@ v-app
 
 <script>
 let dayjs = require('dayjs')
+let markdown = require('markdown').markdown
 
 export default {
   data: () => ({
@@ -418,6 +448,41 @@ export default {
         let d = dayjs.unix(this.currentEvent.when)
         return d.isValid() ? d.format('dddd, MMM D YYYY @ ha') : null
       }
+    },
+    currentEventDescriptionMd() {
+      let it = this.currentEvent.description
+      return it ? markdown.toHTML(it) : null
+    },
+    currentEventInstructionsMd() {
+      let it = this.currentEvent.instructions
+      return it ? markdown.toHTML(it) : null
+    },
+    currentGuideContentMd() {
+      let it = this.currentGuide.content
+      return it ? markdown.toHTML(it) : null
+    },
+    linksBlock() {
+      let block = '## vdo.ninja links\n'
+      let commentaryRoomLink = this.constants.find(it => it.slug == 'commentary-room-link')
+      if(commentaryRoomLink){
+        block += '### Commentary Room\n'
+        block += ` - ${commentaryRoomLink.value}\n`
+      }
+      block += '### Player Links\n'
+      block += JSON.parse(JSON.stringify(this.players))
+        .sort((a, b) => {
+          const A = (a.discord || a.short).toUpperCase()
+          const B = (b.discord || b.short).toUpperCase()
+          if(A<B) return -1
+          if(A>B) return 1
+          return 0
+        })
+        .map(it => ` - **${it.discord || it.short}**: ${this.vdoPush(it.short)}`)
+        .join('\n')
+      return block
+    },
+    linksMarkdown() {
+      return markdown.toHTML(this.linksBlock)
     }
   },
   methods: {
@@ -427,6 +492,14 @@ export default {
     },
     format(it, format='dddd, MMM D @ ha') {
       return dayjs.unix(it).format(format)
+    },
+    vdoPush(short) {
+      let s = encodeURIComponent(short.toLowerCase())
+      return `https://vdo.ninja/?s&push=raceswild${s}`
+    },
+    vdoView(short) {
+      let s = encodeURIComponent(short.toLowerCase())
+      return `https://vdo.ninja/?view=raceswild${s}`
     },
     openEvent(item){
       this.eventDialog = true
@@ -533,7 +606,7 @@ export default {
       this.upcomingEvents = await fetch(`${this.api}/upcoming_events`)
         .then(data => data.json())
         .then(json => json.result)
-      this. pastEvents = await fetch(`${this.api}/past_events`)
+      this.pastEvents = await fetch(`${this.api}/past_events`)
         .then(data => data.json())
         .then(json => json.result)
       let players = await fetch(`${this.api}/players`)
@@ -571,3 +644,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.md-preview {
+  overflow: scroll;
+}
+</style>

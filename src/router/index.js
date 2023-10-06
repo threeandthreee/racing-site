@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import EventView from '../views/EventView.vue'
 import BingoView from '../views/BingoView.vue'
-import ChecklistView from '../views/ChecklistView.vue'
 import AdminView from '../views/AdminView.vue'
-import InstructionsView from '../views/InstructionsView.vue'
+import GuideView from '../views/GuideView.vue'
+import GuidesView from '../views/GuidesView.vue'
+import PlayerView from '../views/PlayerView.vue'
 
 Vue.use(VueRouter)
 
@@ -15,14 +17,19 @@ const routes = [
     component: HomeView
   },
   {
+    path: '/next',
+    name: 'next',
+    component: EventView
+  },
+  {
+    path: '/event/:id',
+    name: 'event',
+    component: EventView
+  },
+  {
     path: '/bingo',
     name: 'bingo',
     component: BingoView
-  },
-  {
-    path: '/checklist',
-    name: 'checklist',
-    component: ChecklistView
   },
   {
     path: '/admin',
@@ -31,12 +38,26 @@ const routes = [
   },
   {
     path: '/join',
-    redirect: '/instructions'
+    redirect: '/next'
   },
   {
     path: '/instructions',
-    name: 'instructions',
-    component: InstructionsView
+    redirect: '/next'
+  },
+  {
+    path: '/guide/:slug',
+    name: 'guide',
+    component: GuideView
+  },
+  {
+    path: '/guides',
+    name: 'guides',
+    component: GuidesView
+  },
+  {
+    path: '/player/:short',
+    name: 'player',
+    component: PlayerView
   }
 ]
 
