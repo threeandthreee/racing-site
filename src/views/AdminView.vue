@@ -465,8 +465,7 @@ export default {
       let block = '## vdo.ninja links\n'
       let commentaryRoomLink = this.constants.find(it => it.slug == 'commentary-room-link')
       if(commentaryRoomLink){
-        block += '### Commentary Room\n'
-        block += ` - ${commentaryRoomLink.value}\n`
+        block += `[Commentary Room](${commentaryRoomLink.value})\n`
       }
       block += '### Player Links\n'
       block += JSON.parse(JSON.stringify(this.players))
@@ -477,7 +476,7 @@ export default {
           if(A>B) return 1
           return 0
         })
-        .map(it => ` - **${it.discord || it.short}**: ${this.vdoPush(it.short)}`)
+        .map(it => ` - [${it.discord || it.short}](${this.vdoPush(it.short)})`)
         .join('\n')
       return block
     },
