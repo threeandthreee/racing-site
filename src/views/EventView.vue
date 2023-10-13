@@ -109,16 +109,13 @@ export default {
       let id = this.$route.params && this.$route.params.id
       let guides = await fetch(`${this.api}/guides`)
         .then(data => data.json())
-        .then(json => json.result)
       let event
       if(id)
         event = await fetch(`${this.api}/event?id=${id}`)
           .then(data => data.json())
-          .then(json => json.result)
       else
         event = await fetch(`${this.api}/next_event?offset=-6`)
           .then(data => data.json())
-          .then(json => json.result)
       ;['description', 'instructions'].forEach(item => {
         if(event[item])
           event[item + '_md'] = markdown.toHTML(event[item])
@@ -132,7 +129,6 @@ export default {
       if(event.participants){
         let players = await fetch(`${this.api}/players`)
           .then(data => data.json())
-          .then(json => json.result)
         if(players)
           event.players = event.participants
             .map(it => players.find(that => that._id == it))

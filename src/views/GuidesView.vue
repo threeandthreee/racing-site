@@ -28,7 +28,6 @@ export default {
       this.ready = false
       this.guides = await fetch(`${this.api}/guides`)
         .then(data => data.json())
-        .then(json => json.result)
       this.ready = true
     }
   },

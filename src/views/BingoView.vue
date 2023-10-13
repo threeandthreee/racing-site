@@ -32,13 +32,12 @@ export default {
       this.ready = false
       let nextEvent = await fetch(`${this.api}/next_event?offset=-12`)
         .then(data => data.json())
-        .then(json => json.result)
       if(nextEvent.links.bingo)
         this.bingo = nextEvent.links.bingo
       else
         this.bingo = await fetch(`${this.api}/constant?slug=bingo`)
           .then(data => data.json())
-          .then(json => json.result.value)
+          .then(json => json.value)
       this.ready = true
     }
   },

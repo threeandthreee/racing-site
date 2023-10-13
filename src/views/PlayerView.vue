@@ -37,7 +37,6 @@ export default {
       let short = encodeURIComponent(this.$route.params.short)
       this.player = await fetch(`${this.api}/player?short=${short}`)
         .then(data => data.json())
-        .then(json => json.result)
       console.log(this.player)
       this.ready = true
     }

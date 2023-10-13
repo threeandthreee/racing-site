@@ -604,13 +604,10 @@ export default {
       this.loading = true
       this.upcomingEvents = await fetch(`${this.api}/upcoming_events`)
         .then(data => data.json())
-        .then(json => json.result)
       this.pastEvents = await fetch(`${this.api}/past_events`)
         .then(data => data.json())
-        .then(json => json.result)
       let players = await fetch(`${this.api}/players`)
         .then(data => data.json())
-        .then(json => json.result)
       players.forEach(player => {
         player.participations = 0
         player.wins = 0
@@ -627,10 +624,8 @@ export default {
       this.players = players
       this.constants = await fetch(`${this.api}/constants`)
         .then(data => data.json())
-        .then(json => json.result)
       this.guides = await fetch(`${this.api}/guides`)
         .then(data => data.json())
-        .then(json => json.result)
       this.loading = false
     }
   },

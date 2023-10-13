@@ -140,18 +140,15 @@ export default {
       this.readiness = 0
       this.upcomingEvents = await fetch(`${this.api}/upcoming_events`)
         .then(data => data.json())
-        .then(json => json.result)
       this.readiness++
       this.blurb = await fetch(`${this.api}/constant?slug=home-blurb`)
         .then(data => data.json())
-        .then(json => markdown.toHTML(json.result.value))
+        .then(json => markdown.toHTML(json.value))
       this.readiness++
       let pastEvents = await fetch(`${this.api}/past_events`)
         .then(data => data.json())
-        .then(json => json.result)
       let players = await fetch(`${this.api}/players`)
         .then(data => data.json())
-        .then(json => json.result)
       players.forEach(player => {
         player.participations = 0
         player.wins = 0

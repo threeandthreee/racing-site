@@ -29,7 +29,6 @@ export default {
       let slug = this.$route.params && this.$route.params.slug
       let guide = await fetch(`${this.api}/guide?slug=${slug}`)
         .then(data => data.json())
-        .then(json => json.result)
       if(guide)
         guide.content_md = markdown.toHTML(guide.content)
       this.guide = guide
