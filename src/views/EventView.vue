@@ -39,7 +39,7 @@ v-app
           outlined
           :to="`/player/${encodeURIComponent(player.short)}`"
         ) {{player.short}}
-      div(v-if="isFuture && event.instructions")
+      div(v-if="!isPast && event.instructions")
         v-divider.mt-4.mb-2
         v-divider.mt-2.mb-8
         v-divider.mt-8.mb-2
