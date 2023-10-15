@@ -614,7 +614,7 @@ export default {
         this.pastEvents.forEach(event => {
           if(event.participants.includes(player._id))
             player.participations++
-          if(event.winners.includes(player._id))
+          if(event.winners && event.winners.includes(player._id))
             player.wins++
         })
       })
