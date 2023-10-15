@@ -91,13 +91,13 @@ export default {
       if(!(this.event && this.event.when))
         return null
       let d = dayjs.unix(this.event.when)
-      return d.isBefore(dayjs())
+      return d.isBefore(dayjs().add(-6, 'h'))
     },
     isFuture() {
       if(!(this.event && this.event.when))
         return null
       let d = dayjs.unix(this.event.when)
-      return d.isAfter(dayjs().add(6, 'h'))
+      return d.isAfter(dayjs())
     },
     isNow() {
       return !this.isPast && !this.isFuture
